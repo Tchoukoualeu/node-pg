@@ -1,8 +1,10 @@
 import express, { NextFunction, Request, Response } from "express"
 import cors from "cors"
 import datesRoutes from "./routes/datesRoutes"
+import { connectDB } from "./database/dbConfig"
 
 const app = express()
+connectDB()
 
 app.get("/health", (_req, res) => {
   res.send({ health: true })

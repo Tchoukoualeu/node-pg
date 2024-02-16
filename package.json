@@ -7,7 +7,7 @@
     "start": "tsc && node dist/src/server.js",
     "build": "tsc -p tsconfig.json",
     "lint": "eslint . --ext .ts",
-    "test": "jest",
+    "test": "jest .ts",
     "start:dev": "nodemon --exec npm run start"
   },
   "keywords": [],
