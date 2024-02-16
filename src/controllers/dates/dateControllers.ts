@@ -12,13 +12,13 @@ export async function addDates(req: TypedRequestBody<Dates>, res: Response) {
   const { start, end } = req.body
 
   try {
-    const lastEntry = await DatesModel.findOne(
-      {},
-      {},
-      { sort: { created_at: -1 } }
+    const lastEntry = (await DatesModel.find({}).sort({ _id: -1 }).limit(1)).at(
+      0
     )
 
-    if (moment(lastEntry?.end).isAfter(moment(start))) {
+    console.log(lastEntry?.end, { start })
+
+    if (!!lastEntry?.end && moment(lastEntry?.end).isAfter(moment(start))) {
       logger.warn("Invalid starting date")
 
       return res.status(400).send({ message: "Invalid starting date" })
@@ -36,15 +36,21 @@ export async function addDates(req: TypedRequestBody<Dates>, res: Response) {
   }
 }
 
-export async function getLastEntry(_req: Request, res: Response) {
+export async function getTodayDate(_req: Request, res: Response) {
   try {
-    const lastEntry = await DatesModel.findOne(
-      {},
-      {},
-      { sort: { created_at: -1 } }
-    )
+    return res.status(201).send({ refStart: new Date().toISOString() })
+  } catch (err) {
+    logger.warn(err, "Fail to get last entry")
 
-    return res.status(201).send({ data: lastEntry })
+    return res.status(400).send({ message: err })
+  }
+}
+
+export async function getEntries(_req: Request, res: Response) {
+  try {
+    const data = await DatesModel.find()
+
+    return res.status(200).send({ data })
   } catch (err) {
     logger.warn(err, "Fail to get last entry")
 
