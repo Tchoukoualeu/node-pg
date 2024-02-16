@@ -9,7 +9,7 @@ const app = express()
 connectDB()
 
 app.get("/health", (_req, res) => {
-  res.send()
+  res.send({ health: true })
 })
 
 app.use(cors())
